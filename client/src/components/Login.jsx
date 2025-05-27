@@ -11,13 +11,16 @@ const Login = () => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
 
-    const onSubmitHandler = async (event)=>{
+    const onSubmitHandler = async (event) => {
         try {
             event.preventDefault();
 
-            const { data } = await axios.post(`/api/user/${state}`,{
+            const { data } = await axios.post(`/api/user/${state}`, {
                 name, email, password
+            }, {
+                withCredentials: true  
             });
+
             if (data.success) {
                 navigate('/')
                 setUser(data.user)
@@ -27,7 +30,7 @@ const Login = () => {
             }
 
         } catch (error) {
-                toast.error(error.message)
+            toast.error(error.message)
 
         }
 
