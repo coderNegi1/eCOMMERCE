@@ -19,37 +19,34 @@ import trackingRouter from './routes/trackingRoutes.js';
 const app = express();
 const port = process.env.PORT || 4000;
 
+// डेटाबेस और क्लाउडिनरी कनेक्शन
 await connectDB();
 connectCloudinary();
 
-// CORS Configuration
+// CORS कॉन्फ़िगरेशन
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://e-commerce-black-xi.vercel.app'
+  'https://e-commerce-black-xi.vercel.app', 
+  'http://localhost:5173'
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (process.env.NODE_ENV === 'development') return callback(null, true);
-    if (allowedOrigins.includes(origin)) callback(null, true);
-    else callback(new Error('CORS Policy Blocked'), false);
-  },
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.options('*', cors());
+app.options('*', cors()); // प्रीफ्लाइट रिक्वेस्ट्स के लिए
 
-// Stripe Webhook
+// स्ट्राइप वेबहुक
 app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
 
-// Middlewares
+// मिडलवेयर्स
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
-app.get('/', (req, res) => res.send("API is working"));
+// रूट्स
+app.get('/', (req, res) => res.send("API काम कर रहा है"));
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
@@ -59,6 +56,7 @@ app.use('/api/order', orderRouter);
 app.use('/api/wishlist', wishlistRouter);
 app.use('/api/track', trackingRouter);
 
+// सर्वर स्टार्ट
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`सर्वर चल रहा है http://localhost:${port} पर`);
 });
