@@ -24,9 +24,9 @@ export const register = async (req, res) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true, // ← हमेशा true (Vercel पर HTTPS)
-            sameSite: 'none', // ← Cross-site cookie
-            domain: '.vercel.app', // ← सभी subdomains के लिए
+            secure: true, // For HTTPS on Vercel, this must be true
+            sameSite: 'none', // For cross-site cookies if frontend and backend are separate origins
+            // domain: '.vercel.app', // <-- This line has been removed. Browser will set domain automatically.
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
@@ -39,7 +39,7 @@ export const register = async (req, res) => {
 };
 
 
-//login User : /api/user/login
+// Login User : /api/user/login
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -59,9 +59,9 @@ export const login = async (req, res) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true, // ← हमेशा true (Vercel पर HTTPS)
-            sameSite: 'none', // ← Cross-site cookie
-            domain: '.vercel.app', // ← सभी subdomains के लिए
+            secure: true, // For HTTPS on Vercel, this must be true
+            sameSite: 'none', // For cross-site cookies if frontend and backend are separate origins
+            // domain: '.vercel.app', // <-- This line has been removed. Browser will set domain automatically.
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
@@ -72,11 +72,12 @@ export const login = async (req, res) => {
     }
 }
 
-//Check Auth : /api/user/is-auth
+// Check Auth : /api/user/is-auth
 export const isAuth = async (req, res) => {
     try {
-        const userId = req.user.id; // Access from req.user
-        const user = await User.findById(userId).select("-password");
+        // req.user.id will be populated by your authentication middleware
+        const userId = req.user.id;
+        const user = await User.findById(userId).select("-password"); // Don't send password hash back
         return res.json({ success: true, user });
     } catch (error) {
         console.log(error.message);
@@ -84,14 +85,14 @@ export const isAuth = async (req, res) => {
     }
 };
 
-//Logout user : /api/user/logout
+// Logout user : /api/user/logout
 export const logout = async (req, res) => {
     try {
         res.clearCookie('token', {
             httpOnly: true,
-            secure: true, // ← हमेशा true (Vercel पर HTTPS)
-            sameSite: 'none', // ← Cross-site cookie
-            domain: '.vercel.app', // ← सभी subdomains के लिए
+            secure: true, // For HTTPS on Vercel, this must be true
+            sameSite: 'none', // For cross-site cookies if frontend and backend are separate origins
+            // domain: '.vercel.app', // <-- This line has been removed. Browser will set domain automatically.
         });
         return res.json({ success: true, message: "Logged Out" })
     } catch (error) {
