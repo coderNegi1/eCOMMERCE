@@ -24,11 +24,11 @@ export const register = async (req, res) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: true, // ← हमेशा true (Vercel पर HTTPS)
+            sameSite: 'none', // ← Cross-site cookie
+            domain: '.vercel.app', // ← सभी subdomains के लिए
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-
 
         return res.json({ success: true, user: { email: user.email, name: user.name } });
 
@@ -40,7 +40,6 @@ export const register = async (req, res) => {
 
 
 //login User : /api/user/login
-
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -56,13 +55,13 @@ export const login = async (req, res) => {
         if (!isMatch)
             return res.json({ success: false, message: 'Invalid email or password' });
 
-
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: true, // ← हमेशा true (Vercel पर HTTPS)
+            sameSite: 'none', // ← Cross-site cookie
+            domain: '.vercel.app', // ← सभी subdomains के लिए
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
@@ -70,10 +69,8 @@ export const login = async (req, res) => {
     } catch (error) {
         console.log(error.message);
         res.json({ success: false, message: error.message });
-
     }
 }
-
 
 //Check Auth : /api/user/is-auth
 export const isAuth = async (req, res) => {
@@ -88,13 +85,13 @@ export const isAuth = async (req, res) => {
 };
 
 //Logout user : /api/user/logout
-
 export const logout = async (req, res) => {
     try {
         res.clearCookie('token', {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            secure: true, // ← हमेशा true (Vercel पर HTTPS)
+            sameSite: 'none', // ← Cross-site cookie
+            domain: '.vercel.app', // ← सभी subdomains के लिए
         });
         return res.json({ success: true, message: "Logged Out" })
     } catch (error) {
@@ -102,5 +99,3 @@ export const logout = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 }
-
-

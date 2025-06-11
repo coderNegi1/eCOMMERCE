@@ -19,14 +19,14 @@ import trackingRouter from './routes/trackingRoutes.js';
 const app = express();
 const port = process.env.PORT || 4000; 
 
-
 await connectDB();
 connectCloudinary();
 
-
 const allowedOrigins = [
   'https://e-commerce-black-xi.vercel.app', 
-  'http://localhost:5173' ]
+  'https://e-commerce-grocery-store-six.vercel.app', // ← नया FRONTEND_URL
+  'http://localhost:5173'
+];
 
 app.use(cors({
   origin: allowedOrigins,
@@ -35,14 +35,16 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'] 
 }));
 
-app.options('*', cors()); 
+app.options('*', cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
 
 app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
 
-
 app.use(express.json()); 
 app.use(cookieParser()); 
-
 
 app.get('/', (req, res) => res.send("API is working")); 
 app.use('/api/user', userRouter); 
@@ -53,7 +55,6 @@ app.use('/api/address', addressRouter);
 app.use('/api/order', orderRouter); 
 app.use('/api/wishlist', wishlistRouter); 
 app.use('/api/track', trackingRouter); 
-
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
