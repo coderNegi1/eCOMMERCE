@@ -13,7 +13,7 @@ function Orders() {
   // Fetch all orders for the admin view
   const fetchOrders = async () => {
     try {
-      const { data } = await axios.get('/api/order/seller');
+      const { data } = await axios.get('/api/orders/seller');
       if (data.success) {
         setOrders(data.orders);
       } else {
@@ -28,7 +28,7 @@ function Orders() {
   // Handle status change from the dropdown
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const { data } = await axios.put(`/api/order/update-status/${orderId}`, { status: newStatus });
+      const { data } = await axios.put(`/api/orders/update-status/${orderId}`, { status: newStatus });
       if (data.success) {
         toast.success(`Order ${orderId} updated to ${newStatus}`);
         fetchOrders(); // Re-fetch orders to update the UI

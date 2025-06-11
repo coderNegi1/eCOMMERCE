@@ -10,7 +10,7 @@ const MyOrders = () => {
 
     const fetchMyOrders = async () => {
         try {
-            const { data } = await axios.get('/api/order/user');
+            const { data } = await axios.get('/api/orders/user');
             console.log(data); // Debugging: check API response
 
             if (data.success) {

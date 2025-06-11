@@ -60,7 +60,7 @@ export const getOrderForTracking = async (req, res) => {
                 name: item.product ? item.product.name : 'Unknown Product',
                 quantity: item.quantity,
                 price: item.product ? item.product.offerPrice : 0,
-                image: item.product ? item.product.image : null,
+                image: item.product?.image?.[0] || null,
             })),
             totalAmount: order.amount,
 

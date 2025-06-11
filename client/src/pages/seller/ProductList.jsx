@@ -11,7 +11,7 @@ function ProductList() {
 
   const handleStockToggle = async (id, currentInStockStatus) => {
     try {
-      const { data } = await axios.post('/api/product/stock', { id, inStock: !currentInStockStatus });
+      const { data } = await axios.post('/api/products/stock', { id, inStock: !currentInStockStatus });
       if (data.success) {
         loadProducts();
         toast.success(data.message);
@@ -29,7 +29,7 @@ function ProductList() {
     }
 
     try {
-      const { data } = await axios.post('/api/product/stock', { id, stock: stockToUpdate });
+      const { data } = await axios.post('/api/products/stock', { id, stock: stockToUpdate });
       if (data.success) {
         setEditingId(null);
         loadProducts();

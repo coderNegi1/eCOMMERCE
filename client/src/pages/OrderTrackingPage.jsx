@@ -118,10 +118,11 @@ const OrderTrackingPage = () => {
                             <div className='flex items-center mb-4 md:mb-0'>
                                 <div className='bg-primary/10 p-4 rounded-lg'>
                                     <img
-                                        src={item.product?.image?.[0] || item.image || 'https://via.placeholder.com/64?text=Product'}
+                                        src={item.image || 'https://via.placeholder.com/64?text=No+Image'}
                                         alt={item.name}
                                         className='w-16 h-16 object-cover rounded-md'
                                     />
+
                                 </div>
                                 <div className='ml-4'>
                                     <h2 className='text-lg font-medium text-gray-800'>{item.name || "Product Name Not Available"}</h2>

@@ -30,7 +30,7 @@ function AddProducts() {
                 formData.append('images', files[i])
             }
 
-            const { data } = await axios.post('/api/product/add', formData)
+            const { data } = await axios.post('/api/products/add', formData)
 
             if (data.success) {
                 toast.success(data.message);

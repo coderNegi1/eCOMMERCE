@@ -28,7 +28,7 @@ export const addProduct = async (req, res) => {
     }
 };
 
-// Get All Products: /api/product/list (GET)
+// Get All Products: /api/products/list (GET)
 export const productList = async (req, res) => {
     try {
         const products = await Product.find({});
