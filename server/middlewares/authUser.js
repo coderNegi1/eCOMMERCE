@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js'; // <--- ADD THIS LINE: Import your User model
+import User from '../models/User.js';
 
+// Middleware to authenticate user using JWT token in cookies
 const authUser = async (req, res, next) => {
     const { token } = req.cookies;
-    console.log("AuthUser: Received token from cookies:", token); // Add logging
+    console.log("AuthUser: Received token from cookies:", token);
 
     if (!token) {
         console.log("AuthUser: No token found. User is not authenticated.");
@@ -12,22 +13,20 @@ const authUser = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("AuthUser: Decoded token (payload):", decoded); // Add logging
+        console.log("AuthUser: Decoded token (payload):", decoded);
 
-        // <--- CRITICAL CHANGE START --->
-        // Fetch the user from the database and attach the full user object to req.user
+        // Attach user object (without password) to req.user
         req.user = await User.findById(decoded.id).select('-password');
-        // <--- CRITICAL CHANGE END --->
 
         if (!req.user) {
-            console.log("AuthUser: User not found in DB with ID from token:", decoded.id); // Add logging
+            console.log("AuthUser: User not found in DB with ID from token:", decoded.id);
             return res.status(401).json({ success: false, message: 'Not Authorized, user not found' });
         }
 
-        console.log("AuthUser: User authenticated and attached to req.user with ID:", req.user._id); // Add logging
+        console.log("AuthUser: User authenticated and attached to req.user with ID:", req.user._id);
         next();
     } catch (error) {
-        console.error("AuthUser middleware error:", error.message); // Add logging for actual errors
+        console.error("AuthUser middleware error:", error.message);
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
             return res.status(401).json({ success: false, message: 'Invalid Token or Token Expired' });
         }
