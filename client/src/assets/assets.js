@@ -70,6 +70,8 @@ import quinoa_image from "./quinoa_image.png";
 import brown_rice_image from "./brown_rice_image.png";
 import barley_image from "./barley_image.png";
 import grocery_mart_logo from "./grocery_mart_logo.png";
+import wishlist_icon from './wishlist_icon.png';
+import wishlist_icon_filled from './wishlist_icon_filled.png';
 
 export const assets = {
   logo,
@@ -100,6 +102,8 @@ export const assets = {
   add_address_image,
   box_icon,
   grocery_mart_logo,
+  wishlist_icon,
+  wishlist_icon_filled
 };
 
 export const categories = [

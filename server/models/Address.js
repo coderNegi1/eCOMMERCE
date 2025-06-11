@@ -1,7 +1,8 @@
+// Address.js (Model file)
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
-    userId: {type: String, required: true},
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
     firstName: {type: String, required: true},
     lastName: {type: String, required: true},
     email: {type: String, required: true},

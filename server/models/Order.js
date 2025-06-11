@@ -3,9 +3,11 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
     userId: { 
         type: mongoose.Schema.Types.ObjectId, 
-        required: true, 
-        ref: 'User'  // Should match model name
+        ref: 'User' 
     },
+    guestName: { type: String },
+    guestEmail: { type: String },
+    guestPhone: { type: String },
     items: [{
         product: { 
             type: mongoose.Schema.Types.ObjectId, 
@@ -31,7 +33,7 @@ const orderSchema = new mongoose.Schema({
     status: { 
         type: String, 
         default: 'Order Placed',
-        enum: ['Order Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+        enum: ['Order Placed', 'Processing', 'Pending Payment', 'Shipped', 'Delivered', 'Cancelled']
     },
     paymentType: { 
         type: String, 
@@ -42,13 +44,15 @@ const orderSchema = new mongoose.Schema({
         type: Boolean, 
         default: false
     },
+    shippingTrackingNumber: { type: String },
+    shippingCarrier: { type: String },
+    shippingTrackingUrl: { type: String },
 }, { 
     timestamps: true,
-    toJSON: { virtuals: true },  // For proper population in responses
+    toJSON: { virtuals: true }, 
     toObject: { virtuals: true }
 });
 
-// Add population virtuals
 orderSchema.virtual('user', {
     ref: 'User',
     localField: 'userId',

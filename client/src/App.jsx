@@ -18,6 +18,10 @@ import AddProducts from './pages/seller/AddProducts'
 import ProductList from './pages/seller/ProductList'
 import Orders from './pages/seller/Orders'
 import Loading from './components/Loading'
+import Wishlist from './pages/Wishlist'
+import OrderTrackingPage from './pages/OrderTrackingPage';
+import ThankYouPage from './pages/ThankYouPage';
+
 
 function App() {
 
@@ -42,17 +46,18 @@ function App() {
           <Route path='/add-address' element={<AddAddress />} />
           <Route path='/my-orders' element={<MyOrders />} />
           <Route path='/loader' element={<Loading />} />
+          <Route path='/wishlist' element={<Wishlist />} />
 
-          <Route path='/seller' element={isSeller ? <SellerLayout/> : <SellerLogin />}>
-            <Route index element={isSeller ? <AddProducts/> : null} />
-            <Route path='product-list' element={<ProductList/>} />
-            <Route path='orders' element={<Orders/>} />
+          {/* --- THE KEY CHANGE IS HERE --- */}
+          {/* Changed the path to match what's sent in the email link */}
+          <Route path="/order-confirmation/:orderId" element={<OrderTrackingPage />} />
+
+          <Route path="/thank-you" element={<ThankYouPage />} />
+          <Route path='/seller' element={isSeller ? <SellerLayout /> : <SellerLogin />}>
+            <Route index element={isSeller ? <AddProducts /> : null} />
+            <Route path='product-list' element={<ProductList />} />
+            <Route path='orders' element={<Orders />} />
           </Route>
-
-
-
-
-
         </Routes>
       </div>
 
@@ -61,4 +66,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
