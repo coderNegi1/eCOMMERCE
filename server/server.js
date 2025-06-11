@@ -20,29 +20,35 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 await connectDB();
-connectCloudinary(); // <-- await हटाएँ
+connectCloudinary();
 
-const allowedOrigins = ['http://localhost:5173', 'https://e-commerce-axnp.vercel.app'];
-
-app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
+// CORS Configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://e-commerce-black-xi.vercel.app'
+];
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: function (origin, callback) {
+    if (process.env.NODE_ENV === 'development') return callback(null, true);
+    if (allowedOrigins.includes(origin)) callback(null, true);
+    else callback(new Error('CORS Policy Blocked'), false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
+app.options('*', cors());
+
+// Stripe Webhook
+app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
+
+// Middlewares
 app.use(express.json());
 app.use(cookieParser());
 
+// Routes
 app.get('/', (req, res) => res.send("API is working"));
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
@@ -54,5 +60,5 @@ app.use('/api/wishlist', wishlistRouter);
 app.use('/api/track', trackingRouter);
 
 app.listen(port, () => {
-    console.log(`server is running on http://localhost:${port}`);
+  console.log(`Server running on http://localhost:${port}`);
 });
